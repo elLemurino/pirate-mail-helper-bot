@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: "1.x-release/2024-04-09-1.0.0-release.yaml"
+      relativeToChangelogFile: true

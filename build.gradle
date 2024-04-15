@@ -1,0 +1,100 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.4'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.liquibase.gradle' version '2.2.1'
+    id 'nu.studer.jooq' version '9.0'
+}
+
+group = "org.example"
+version = "1.0.0-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+
+    implementation 'com.fasterxml.jackson.core:jackson-core'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+    implementation 'org.eclipse.angus:jakarta.mail:2.0.3'
+
+    implementation 'org.postgresql:postgresql:42.7.3'
+
+    implementation 'org.springframework.boot:spring-boot-starter-jooq'
+    implementation 'org.jooq:jooq-jackson-extensions:3.18.3'
+    implementation 'org.liquibase:liquibase-core'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    liquibaseRuntime 'org.liquibase:liquibase-core'
+    liquibaseRuntime 'info.picocli:picocli:4.7.5'
+    liquibaseRuntime 'org.postgresql:postgresql:42.7.3'
+
+    jooqGenerator 'org.postgresql:postgresql:42.7.3'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java", "build/generated/sources/jooq"]
+        }
+    }
+}
+
+java {
+    sourceCompatibility = '17'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+
+liquibase {
+    activities {
+        main {
+            changelogFile "./src/main/resources/db/changelog/db.changelog-master.yaml"
+            url System.getenv("DB_URL")
+            username System.getenv("DB_USERNAME")
+            password System.getenv("DB_PASSWORD")
+        }
+    }
+}
+
+jooq {
+    version = dependencyManagement.importedProperties['jooq.version']
+    configurations {
+        main {
+            generationTool {
+                jdbc {
+                    driver = "org.postgresql.Driver"
+                    url = System.getenv("DB_URL")
+                    user = System.getenv("DB_USERNAME")
+                    password = System.getenv("DB_PASSWORD")
+                }
+                generator {
+                    database {
+                        name = "org.jooq.meta.postgres.PostgresDatabase"
+                        includes = ".*"
+                        excludes = "databasechangelog.*"
+                        inputSchema = "public"
+                    }
+                    generate {
+                        deprecated = false
+                    }
+                    target {
+                        packageName = "org.example.bot.jooq"
+                        directory = "./build/generated/sources/jooq/java/main"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,116 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-04-09-1.0.0-release-01
+      author: p.ratushniy
+      comment: add tag 1.0.0 to db
+      changes:
+        - tagDatabase:
+            tag: 1.0.0
+  - changeSet:
+      id: 2024-04-09-1.0.0-release-02
+      author: p.ratushniy
+      comment: create 'mail_settings' table
+      changes:
+        - createTable:
+            tableName: mail_settings
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: mail_user
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mail_password
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mail_imap_host
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mail_imap_port
+                  type: int
+                  defaultValueNumeric: '993'
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mail_imap_ssl_enabled
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mail_smtp_host
+                  type: text
+              - column:
+                  name: mail_smtp_port
+                  type: int
+                  defaultValueNumeric: '465'
+              - column:
+                  name: mail_smtp_ssl_enabled
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: created_at
+                  type: datetime
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_updated_at
+                  type: datetime
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 2024-04-09-1.0.0-release-11
+      author: p.ratushniy
+      comment: create 'mail_rules' table
+      changes:
+        - createTable:
+            tableName: mail_rules
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rule_expression
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rule_type
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: additional_data
+                  type: jsonb
+              - column:
+                  name: created_at
+                  type: datetime
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_updated_at
+                  type: datetime
+                  constraints:
+                    nullable: false

@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: pirate-mail-helper-bot
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  liquibase:
+    enabled: false
+  jooq:
+    sql-dialect: postgres
+
+
+
